@@ -1,0 +1,31 @@
+{
+  "users": {
+    "admin": {
+      "name": "Quản Trị Viên",
+      "department": "Ban Giám Đốc",
+      "position": "Quản Trị Hệ Thống",
+      "pass": "ty123456"
+    },
+    "NV001": {
+      "name": "Nguyễn Văn An",
+      "department": "Kỹ Thuật",
+      "position": "Kỹ Sư",
+      "pass": "123456"
+    }
+  },
+  "salary_data": {
+    "NV001": {
+      "2026-10": {
+        "date": "01/10/2026",
+        "items": [
+          { "label": "Lương Cơ Bản", "amount": 8000000, "type": "ThuNhap" },
+          { "label": "Phụ Cấp Ăn Trưa", "amount": 500000, "type": "ThuNhap" },
+          { "label": "Bảo Hiểm Xã Hội", "amount": -800000, "type": "KhauTru" },
+          { "label": "Thực Nhận", "amount": 7700000, "type": "ThucNhan" }
+        ]
+      }
+    }
+  },
+  "confirmations": {},
+  "updated_at": "2026-10-21T10:00:00.000Z"
+}
