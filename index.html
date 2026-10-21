@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Bảng Lương</title>
+    <title>Hệ Thống Bảng Lương - CSDL Tập Trung</title>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -17,25 +17,18 @@
         .container { max-width: 95%; margin: 0 auto; padding: 1rem; }
         .card { background: var(--card); border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
         .card h3 { color: #1f2937; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-        
         .form-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
         .form-group { flex: 1; min-width: 180px; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; color: #374151; font-size: 0.9rem; }
         .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
-        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
         .btn { padding: 0.75rem 1.4rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.95rem; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: #1d4ed8; }
         .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: #15803d; }
         .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #b91c1c; }
         .btn-secondary { background: var(--light); color: #374151; }
-        .btn-secondary:hover { background: #d1d5db; }
         .btn-warning { background: var(--warning); color: white; }
-        .btn-warning:hover { background: #d97706; }
         .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
-        
         .login-box { max-width: 420px; margin: 0; padding: 2rem; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         .login-box h2 { text-align: center; color: #1e40af; margin-bottom: 1.5rem; }
         .tabs { display: flex; margin-bottom: 1.2rem; border-bottom: 2px solid var(--border); }
@@ -43,14 +36,10 @@
         .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
         .error { color: var(--danger); margin-top: 0.5rem; text-align: center; display: none; }
         .success-msg { color: var(--success); margin-top: 0.5rem; text-align: center; display: none; }
-        
         .header-bar { background: white; padding: 1rem 1.5rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
-        .header-bar h1 { font-size: 1.2rem; color: #1f2937; }
-        .user-bar { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
-        
         table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
         th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        th { background: var(--light); font-weight: 600; color: #374151; }
+        th { background: var(--light); font-weight: 600; }
         .text-right { text-align: right; font-family: monospace; }
         .income { color: var(--success); font-weight: 500; }
         .deduction { color: var(--danger); font-weight: 500; }
@@ -60,252 +49,134 @@
         .status-yes { background: #dcfce7; color: #166534; }
         .status-no { background: #fef3c7; color: #92400e; }
         .row-actions { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-        
-        .upload-area { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 2rem; text-align: center; margin: 1rem 0; cursor: pointer; transition: 0.2s; }
+        .upload-area { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 2rem; text-align: center; margin: 1rem 0; cursor: pointer; }
         .upload-area:hover { border-color: var(--primary); background: #eff6ff; }
-        .file-name { margin-top: 0.5rem; font-weight: 500; color: var(--primary); }
-        
-        .edit-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
-            z-index: 1000; padding: 1rem;
-        }
-        .edit-container {
-            background: white; border-radius: 16px; width: 100%; max-width: 550px;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        .edit-header {
-            padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            background: #f8fafc; border-radius: 16px 16px 0 0;
-        }
-        .edit-header h3 { margin: 0; border: none; padding: 0; }
-        .edit-close {
-            background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray);
-            line-height: 1;
-        }
-        .edit-body { padding: 1.5rem; }
-        .edit-table { width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 0; }
-        .edit-table th { background: var(--light); padding: 0.75rem; font-size: 0.85rem; width: 35%; }
-        .edit-table td { padding: 0.75rem; border-bottom: 1px solid #f0f0f0; }
-        .edit-table input { padding: 0.5rem; font-size: 0.9rem; width: 100%; }
-        .edit-footer {
-            padding: 1rem 1.5rem; border-top: 1px solid var(--border);
-            display: flex; gap: 0.8rem; justify-content: flex-end; background: #f9fafb;
-            border-radius: 0 0 16px 16px;
-        }
-        .password-hint { font-size: 0.8rem; color: var(--gray); margin-top: 0.3rem; }
-        
-        @media (max-width: 768px) {
-            th, td { padding: 0.6rem 0.4rem; font-size: 0.85rem; }
-            .form-row { flex-direction: column; }
-            .row-actions { flex-direction: column; }
-        }
-        @media print {
-            .header-bar, .no-print, .confirm-section { display: none !important; }
-            body { background: white; }
-        }
         .note-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
+        .sync-box { background: #dbeafe; border-left: 4px solid #3b82f6; padding: 0.75rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
         .divider-row { border-top: 2px solid var(--border); }
+        @media print { .header-bar, .no-print { display: none !important; } body { background: white; } }
     </style>
 </head>
 <body>
 
+<!-- ================= THÔNG TIN KẾT NỐI CSDL ================= -->
+<script>
+// ========== ĐIỀN THÔNG TIN CỦA BẠN VÀO ĐÂY ==========
+const GITHUB_CONFIG = {
+    owner: "anhtoan199525",      // ← Tên tài khoản GitHub
+    repo: "BangluongTE",         // ← Tên kho chứa website
+    token: "ĐIỀN_MÃ_TOKEN_CỦA_BẠN_VÀO_ĐÂY"  // ← Mã token
+};
+// ======================================================
+</script>
+
 <div id="loginPage">
     <div class="login-box">
         <h2>🔐 Hệ Thống Bảng Lương</h2>
-        <div class="note-box" style="font-size:0.9rem;margin-bottom:1rem">
-            <strong>📌 Phiên bản dùng thử:</strong> Dữ liệu lưu trên máy này. Đăng nhập cùng tài khoản trên máy khác sẽ không thấy dữ liệu.
-        </div>
+        <div class="sync-box">✅ <strong>Dữ liệu tập trung</strong> — mọi máy xem cùng nguồn</div>
         <div class="tabs">
             <div class="tab active" data-tab="emp" onclick="switchTab('emp')">Nhân Viên</div>
             <div class="tab" data-tab="admin" onclick="switchTab('admin')">Quản Trị</div>
         </div>
-
         <div id="empLogin">
-            <div class="form-group">
-                <label>Mã nhân viên</label>
-                <input type="text" id="empUser" placeholder="VD: NV001">
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu</label>
-                <input type="password" id="empPass" placeholder="Mật khẩu">
-            </div>
+            <div class="form-group"><label>Mã nhân viên</label><input type="text" id="empUser" placeholder="VD: NV001"></div>
+            <div class="form-group"><label>Mật khẩu</label><input type="password" id="empPass"></div>
             <button class="btn btn-primary" style="width:100%;margin-top:0.5rem" onclick="empLogin()">Đăng Nhập</button>
             <p class="error" id="empErr">Mã NV hoặc mật khẩu không đúng!</p>
         </div>
-
         <div id="adminLogin" class="hidden">
-            <div class="form-group">
-                <label>Tài khoản quản trị</label>
-                <input type="text" id="adminUser" value="admin">
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu quản trị</label>
-                <input type="password" id="adminPass" value="admin123">
-            </div>
+            <div class="form-group"><label>Tài khoản quản trị</label><input type="text" id="adminUser" value="admin"></div>
+            <div class="form-group"><label>Mật khẩu quản trị</label><input type="password" id="adminPass" value="admin123"></div>
             <button class="btn btn-primary" style="width:100%;margin-top:0.5rem" onclick="adminLogin()">Đăng Nhập Quản Trị</button>
             <p class="error" id="adminErr">Tài khoản hoặc mật khẩu không đúng!</p>
         </div>
     </div>
 </div>
 
-<!-- TRANG NHÂN VIÊN -->
 <div id="empPage" class="hidden">
     <div class="container">
         <div class="header-bar">
-            <h1>💼 Bảng Tính Lương Nhân Viên</h1>
-            <div class="user-bar">
-                <span id="empName"></span>
-                <select id="selPeriod" class="form-group" style="width:auto;padding:0.5rem" onchange="renderSalary()"></select>
-                <button class="btn btn-warning btn-sm" onclick="openEmpEditModal()">✏️ Chỉnh Sửa Tài Khoản</button>
+            <h1>💼 Bảng Tính Lương</h1>
+            <div>
+                <span id="syncStatus" style="color:var(--success);font-size:0.85rem">✅ Dữ liệu đồng bộ</span>
+                <button class="btn btn-secondary btn-sm" onclick="loadData()">🔄 Tải Lại</button>
                 <button class="btn btn-secondary btn-sm" onclick="logout()">Đăng Xuất</button>
             </div>
         </div>
-
         <div class="card">
             <h3>👤 Thông Tin Tài Khoản</h3>
-            <table class="edit-table">
-                <tr><th style="width:25%">Mã nhân viên</th><td id="eMaNV"></td></tr>
-                <tr><th>Họ và Tên</th><td id="eFullname"></td></tr>
-                <tr><th>Bộ phận</th><td id="eDept"></td></tr>
-                <tr><th>Chức vụ</th><td id="ePos"></td></tr>
+            <table style="width:100%;border:none">
+                <tr><th style="width:30%;background:var(--light)">Mã NV</th><td id="dMaNV"></td></tr>
+                <tr><th>Họ và Tên</th><td id="dTen"></td></tr>
+                <tr><th>Bộ Phận</th><td id="dBoPhan"></td></tr>
+                <tr><th>Chức Vụ</th><td id="dChucVu"></td></tr>
             </table>
         </div>
-
         <div class="card">
-            <h3>📋 Thông Tin Lương - <span id="eDate"></span></h3>
+            <h3>📋 Bảng Lương - <select id="selPeriod" onchange="showSalary()" style="padding:0.5rem;border-radius:6px;border:1px solid #ddd"></select></h3>
             <table id="salaryTable">
                 <thead><tr><th>Nội Dung</th><th class="text-right">Số Tiền (VNĐ)</th></tr></thead>
                 <tbody></tbody>
             </table>
-        </div>
-
-        <div class="card confirm-section">
-            <button class="btn btn-success" id="confirmBtn" onclick="confirmSalary()">✅ Xác Nhận Đã Nhận Lương</button>
-            <span id="confirmedBadge" class="hidden" style="color:var(--success);font-weight:600">✅ Đã xác nhận nhận lương</span>
-            <div style="margin-left:auto" class="no-print">
-                <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ In / Lưu PDF</button>
+            <div style="margin-top:1rem">
+                <button class="btn btn-success" id="btnConfirm" onclick="confirmSalary()">✅ Xác Nhận Đã Nhận Lương</button>
+                <span id="confirmedText" class="hidden" style="color:var(--success);font-weight:600">✅ Đã xác nhận</span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- BẢNG CHỈNH SỬA NHÂN VIÊN -->
-<div id="empEditModal" class="edit-modal hidden">
-    <div class="edit-container">
-        <div class="edit-header">
-            <h3>✏️ Chỉnh Sửa Thông Tin Tài Khoản</h3>
-            <button class="edit-close" onclick="closeEmpEditModal()">&times;</button>
-        </div>
-        <div class="edit-body">
-            <table class="edit-table">
-                <tr><th>Mã nhân viên</th><td><input type="text" id="editEmp_MaNV" disabled style="background:var(--light)"></td></tr>
-                <tr><th>Họ và Tên <span style="color:red">*</span></th><td><input type="text" id="editEmp_Name"></td></tr>
-                <tr><th>Bộ phận</th><td><input type="text" id="editEmp_Dept"></td></tr>
-                <tr><th>Chức vụ <span style="color:red">*</span></th><td><input type="text" id="editEmp_Pos"></td></tr>
-                <tr style="background:#fafafa">
-                    <td colspan="2" style="padding:1rem 0.75rem">
-                        <strong>🔐 Đổi Mật Khẩu</strong>
-                        <p class="password-hint">→ Để trống nếu không muốn thay đổi</p>
-                    </td>
-                </tr>
-                <tr><th>Mật khẩu hiện tại</th><td><input type="password" id="editEmp_OldPass"></td></tr>
-                <tr><th>Mật khẩu mới</th><td><input type="password" id="editEmp_NewPass"></td></tr>
-                <tr><th>Xác nhận MK mới</th><td><input type="password" id="editEmp_NewPass2"></td></tr>
-            </table>
-            <p class="error" id="empEdit_Err" style="margin-top:1rem"></p>
-            <p class="success-msg" id="empEdit_Success" style="margin-top:1rem">✅ Cập nhật thành công!</p>
-        </div>
-        <div class="edit-footer">
-            <button class="btn btn-secondary" onclick="closeEmpEditModal()">Hủy</button>
-            <button class="btn btn-primary" onclick="saveEmpChanges()">💾 Lưu Thay Đổi</button>
-        </div>
-    </div>
-</div>
-
-<!-- BẢNG CHỈNH SỬA QUẢN TRỊ -->
-<div id="adminEditModal" class="edit-modal hidden">
-    <div class="edit-container">
-        <div class="edit-header">
-            <h3>✏️ Chỉnh Sửa Thông Tin Nhân Viên</h3>
-            <button class="edit-close" onclick="closeAdminEditModal()">&times;</button>
-        </div>
-        <div class="edit-body">
-            <table class="edit-table">
-                <tr><th>Mã nhân viên</th><td><input type="text" id="editAd_MaNV" disabled style="background:var(--light)"></td></tr>
-                <tr><th>Họ và Tên <span style="color:red">*</span></th><td><input type="text" id="editAd_Name"></td></tr>
-                <tr><th>Bộ phận</th><td><input type="text" id="editAd_Dept"></td></tr>
-                <tr><th>Chức vụ <span style="color:red">*</span></th><td><input type="text" id="editAd_Pos"></td></tr>
-                <tr style="background:#fafafa">
-                    <td colspan="2" style="padding:1rem 0.75rem">
-                        <strong>🔐 Đổi Mật Khẩu</strong>
-                        <p class="password-hint">→ Để trống nếu không đổi</p>
-                    </td>
-                </tr>
-                <tr><th>Mật khẩu mới</th><td><input type="password" id="editAd_NewPass"></td></tr>
-            </table>
-            <p class="error" id="adminEdit_Err" style="margin-top:1rem"></p>
-            <p class="success-msg" id="adminEdit_Success" style="margin-top:1rem">✅ Cập nhật thành công!</p>
-        </div>
-        <div class="edit-footer">
-            <button class="btn btn-secondary" onclick="closeAdminEditModal()">Hủy</button>
-            <button class="btn btn-primary" onclick="saveAdminChanges()">💾 Lưu Thay Đổi</button>
-        </div>
-    </div>
-</div>
-
-<!-- TRANG QUẢN TRỊ -->
 <div id="adminPage" class="hidden">
     <div class="container">
         <div class="header-bar">
             <h1>⚙️ Bảng Điều Khiển Quản Trị</h1>
-            <div class="user-bar">
-                <span>Quản trị viên</span>
+            <div>
+                <span id="syncStatusAdmin" style="color:var(--success);font-size:0.85rem">✅ Đã kết nối CSDL</span>
+                <button class="btn btn-secondary btn-sm" onclick="loadData()">🔄 Tải Lại Dữ Liệu</button>
                 <button class="btn btn-secondary btn-sm" onclick="logout()">Đăng Xuất</button>
             </div>
         </div>
-
         <div class="note-box">
-            ⚠️ <strong>Lưu ý:</strong> Dữ liệu chỉ lưu trên trình duyệt. Hãy thường xuyên sao lưu.
+            ⚠️ <strong>Lưu ý:</strong> Sau khi thay đổi dữ liệu, nhấn nút <strong>🔄 Tải Lại</strong> trên trang nhân viên để cập nhật.
         </div>
-
         <div class="card">
             <h3>📤 Tải Lên Bảng Lương Từ Excel</h3>
-            <p style="color:var(--gray);margin-bottom:0.5rem">Cột: <strong>MaNV, HoTen, BoPhan, ChucVu, ThangNam, NoiDung, SoTien, Loai</strong></p>
+            <p style="color:var(--gray);margin-bottom:0.5rem">Cột: MaNV, HoTen, BoPhan, ChucVu, ThangNam, NoiDung, SoTien, Loai</p>
             <div class="upload-area" id="dropZone">
                 <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none">
-                <p style="font-size:1.1rem;font-weight:500;color:var(--primary)">📂 Nhấn hoặc Kéo thả file Excel vào đây</p>
-                <p class="file-name" id="fileName"></p>
+                <p style="font-size:1.1rem;font-weight:500;color:var(--primary)">📂 Kéo thả hoặc nhấn chọn file Excel</p>
+                <p id="fileName"></p>
             </div>
             <div style="margin-top:1rem;display:flex;gap:0.8rem;flex-wrap:wrap">
-                <button class="btn btn-success" onclick="processExcel()">✅ Xử Lý Dữ Liệu</button>
+                <button class="btn btn-success" onclick="processExcel()">✅ Cập Nhật Lên CSDL</button>
                 <button class="btn btn-secondary" onclick="downloadTemplate()">📥 Tải File Mẫu</button>
-                <button class="btn btn-secondary" onclick="exportAllData()">💾 Sao Lưu Dữ Liệu</button>
-                <button class="btn btn-secondary" onclick="importData()">📂 Khôi Phục Dữ Liệu</button>
+                <button class="btn btn-secondary" onclick="exportData()">💾 Tải Dữ Liệu Xuống</button>
             </div>
-            <p class="success-msg" id="uploadSuccess">✅ Dữ liệu đã cập nhật!</p>
+            <p class="success-msg" id="uploadSuccess">✅ Đã lưu lên CSDL!</p>
         </div>
-
         <div class="card">
-            <h3>👤 Thêm Nhân Viên Mới</h3>
+            <h3>👤 Thêm / Sửa Nhân Viên</h3>
             <div class="form-row">
-                <div class="form-group"><label>Mã NV <span style="color:red">*</span></label><input type="text" id="addMaNV"></div>
-                <div class="form-group"><label>Họ và Tên <span style="color:red">*</span></label><input type="text" id="addName"></div>
-                <div class="form-group"><label>Bộ phận</label><input type="text" id="addDept"></div>
-                <div class="form-group"><label>Chức vụ <span style="color:red">*</span></label><input type="text" id="addPos"></div>
-                <div class="form-group"><label>Mật khẩu <span style="color:red">*</span></label><input type="text" id="addPass"></div>
+                <div class="form-group"><label>Mã NV</label><input type="text" id="fMaNV"></div>
+                <div class="form-group"><label>Họ Tên</label><input type="text" id="fTen"></div>
+                <div class="form-group"><label>Bộ Phận</label><input type="text" id="fBoPhan"></div>
+                <div class="form-group"><label>Chức Vụ</label><input type="text" id="fChucVu"></div>
+                <div class="form-group"><label>Mật Khẩu</label><input type="text" id="fMatKhau"></div>
             </div>
-            <button class="btn btn-primary" onclick="addEmployee()">➕ Thêm Nhân Viên</button>
-            <p class="success-msg" id="empSuccess">✅ Thêm thành công!</p>
+            <button class="btn btn-primary" onclick="saveUser()">💾 Lưu Nhân Viên</button>
         </div>
-
         <div class="card">
-            <h3>📋 Danh Sách Nhân Viên</h3>
+            <h3>📋 Danh Sách Nhân Viên & Quản Lý Lương</h3>
             <table id="empList">
                 <thead>
                     <tr>
-                        <th>Mã NV</th><th>Họ Tên</th><th>Bộ Phận</th><th>Chức Vụ</th><th>Tháng Lương</th><th>Trạng Thái</th><th>Thao Tác</th>
+                        <th>Mã NV</th>
+                        <th>Họ Tên</th>
+                        <th>Bộ Phận</th>
+                        <th>Chức Vụ</th>
+                        <th>Tháng Lương</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -315,52 +186,56 @@
 </div>
 
 <script>
-const ADMIN = { user: "admin", pass: "admin123" };
-let editingAdminMaNV = null;
-let currentUser = null, currentRole = null, selectedFile = null;
+let db = null;
+let currentUser = null;
+let fileToUpload = null;
+const API = "https://api.github.com";
 
-// === KHỞI TẠO DỮ LIỆU ===
-function initData() {
-    if (!localStorage.getItem('salary_users')) {
-        localStorage.setItem('salary_users', JSON.stringify({
-            "NV001": { name: "Nguyễn Văn An", department: "Kỹ thuật", position: "Kỹ sư Phát triển", pass: "123456" },
-            "NV002": { name: "Trần Thị Bình", department: "Kế toán", position: "Kế toán viên", pass: "123456" },
-            "NV003": { name: "Lê Văn Cường", department: "Nhân sự", position: "Chuyên viên Nhân sự", pass: "123456" }
-        }));
-    }
-    if (!localStorage.getItem('salary_data')) {
-        localStorage.setItem('salary_data', JSON.stringify({
-            "NV001": {
-                "2026-10": { date: "01/10/2026", items: [
-                    { label: "Lương cơ bản", amount: 12000000, type: "ThuNhap" },
-                    { label: "Phụ cấp chức vụ", amount: 2000000, type: "ThuNhap" },
-                    { label: "Tổng thu nhập", amount: 14000000, type: "TongThuNhap" },
-                    { label: "Bảo hiểm xã hội", amount: -960000, type: "KhauTru" },
-                    { label: "Lương thực nhận", amount: 13040000, type: "ThucNhan" }
-                ]}
-            },
-            "NV002": {
-                "2026-10": { date: "01/10/2026", items: [
-                    { label: "Lương cơ bản", amount: 9500000, type: "ThuNhap" },
-                    { label: "Phụ cấp trách nhiệm", amount: 1000000, type: "ThuNhap" },
-                    { label: "Tổng thu nhập", amount: 10500000, type: "TongThuNhap" },
-                    { label: "Bảo hiểm xã hội", amount: -760000, type: "KhauTru" },
-                    { label: "Lương thực nhận", amount: 9740000, type: "ThucNhan" }
-                ]}
-            }
-        }));
-    }
-    if (!localStorage.getItem('salary_confirm')) {
-        localStorage.setItem('salary_confirm', JSON.stringify({}));
+// === ĐỌC DỮ LIỆU TỪ GITHUB ===
+async function loadData() {
+    try {
+        const res = await fetch(`${API}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data.json`, {
+            headers: { "Authorization": `token ${GITHUB_CONFIG.token}` }
+        });
+        if (!res.ok) throw new Error("Không đọc được dữ liệu");
+        const data = await res.json();
+        db = JSON.parse(atob(data.content));
+        db.sha = data.sha;
+        console.log("✅ Đọc dữ liệu thành công");
+        return true;
+    } catch (err) {
+        console.error("Lỗi đọc dữ liệu:", err);
+        alert("❌ Không kết nối được CSDL: " + err.message);
+        return false;
     }
 }
 
-function getUsers() { return JSON.parse(localStorage.getItem('salary_users')); }
-function setUsers(d) { localStorage.setItem('salary_users', JSON.stringify(d)); }
-function getSalary() { return JSON.parse(localStorage.getItem('salary_data')); }
-function setSalary(d) { localStorage.setItem('salary_data', JSON.stringify(d)); }
-function getConfirm() { return JSON.parse(localStorage.getItem('salary_confirm')); }
-function setConfirm(d) { localStorage.setItem('salary_confirm', JSON.stringify(d)); }
+// === LƯU DỮ LIỆU LÊN GITHUB ===
+async function saveData(message = "Cập nhật dữ liệu") {
+    try {
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2))));
+        const res = await fetch(`${API}/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data.json`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `token ${GITHUB_CONFIG.token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message,
+                content: content,
+                sha: db.sha
+            })
+        });
+        if (!res.ok) throw new Error("Lưu thất bại");
+        const result = await res.json();
+        db.sha = result.content.sha;
+        return true;
+    } catch (err) {
+        console.error("Lỗi lưu dữ liệu:", err);
+        alert("❌ Không lưu được: " + err.message);
+        return false;
+    }
+}
 
 // === ĐĂNG NHẬP ===
 function switchTab(tab) {
@@ -368,26 +243,32 @@ function switchTab(tab) {
     document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
     document.getElementById('empLogin').classList.toggle('hidden', tab !== 'emp');
     document.getElementById('adminLogin').classList.toggle('hidden', tab !== 'admin');
-    document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
 }
 
-function empLogin() {
+async function empLogin() {
+    const loaded = await loadData();
+    if (!loaded) return;
     const u = document.getElementById('empUser').value.trim();
     const p = document.getElementById('empPass').value;
-    const users = getUsers();
-    if (users[u] && users[u].pass === p) {
-        currentUser = u; currentRole = 'emp';
-        showPage('emp'); renderEmpInfo(); loadPeriods(); renderSalary();
+    if (db.users[u] && db.users[u].pass === p) {
+        currentUser = u;
+        showPage('emp');
+        renderEmpInfo();
+        loadPeriodList();
     } else {
         document.getElementById('empErr').style.display = 'block';
     }
 }
 
-function adminLogin() {
+async function adminLogin() {
+    const loaded = await loadData();
+    if (!loaded) return;
     const u = document.getElementById('adminUser').value.trim();
     const p = document.getElementById('adminPass').value;
-    if (u === ADMIN.user && p === ADMIN.pass) {
-        currentRole = 'admin'; showPage('admin'); renderEmpList();
+    if (u === "admin" && db.users["admin"] && db.users["admin"].pass === p) {
+        currentUser = "admin";
+        showPage('admin');
+        renderEmpList();
     } else {
         document.getElementById('adminErr').style.display = 'block';
     }
@@ -400,209 +281,122 @@ function showPage(role) {
 }
 
 function logout() {
-    currentUser = currentRole = null; editingAdminMaNV = null;
+    currentUser = null; db = null;
     document.getElementById('loginPage').classList.remove('hidden');
     document.getElementById('empPage').classList.add('hidden');
     document.getElementById('adminPage').classList.add('hidden');
-    document.getElementById('empUser').value = document.getElementById('empPass').value = '';
-    document.querySelectorAll('.error, .success-msg').forEach(e => e.style.display = 'none');
+    document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
 }
 
-// === NHÂN VIÊN - CHỈNH SỬA ===
-function openEmpEditModal() {
-    const u = getUsers()[currentUser];
-    document.getElementById('editEmp_MaNV').value = currentUser;
-    document.getElementById('editEmp_Name').value = u.name;
-    document.getElementById('editEmp_Dept').value = u.department || '';
-    document.getElementById('editEmp_Pos').value = u.position;
-    document.getElementById('editEmp_OldPass').value = '';
-    document.getElementById('editEmp_NewPass').value = '';
-    document.getElementById('editEmp_NewPass2').value = '';
-    document.getElementById('empEdit_Err').style.display = 'none';
-    document.getElementById('empEdit_Success').style.display = 'none';
-    document.getElementById('empEditModal').classList.remove('hidden');
-}
-function closeEmpEditModal() { document.getElementById('empEditModal').classList.add('hidden'); }
-
-function saveEmpChanges() {
-    const name = document.getElementById('editEmp_Name').value.trim();
-    const dept = document.getElementById('editEmp_Dept').value.trim();
-    const pos = document.getElementById('editEmp_Pos').value.trim();
-    const oldPass = document.getElementById('editEmp_OldPass').value;
-    const newPass = document.getElementById('editEmp_NewPass').value;
-    const newPass2 = document.getElementById('editEmp_NewPass2').value;
-    const errEl = document.getElementById('empEdit_Err');
-    const sucEl = document.getElementById('empEdit_Success');
-    
-    errEl.style.display = 'none'; sucEl.style.display = 'none';
-    if (!name || !pos) { errEl.textContent = 'Tên và Chức vụ không được để trống!'; errEl.style.display = 'block'; return; }
-    
-    const users = getUsers();
-    const user = users[currentUser];
-    
-    if (oldPass || newPass || newPass2) {
-        if (!oldPass) { errEl.textContent = 'Nhập mật khẩu hiện tại!'; errEl.style.display = 'block'; return; }
-        if (oldPass !== user.pass) { errEl.textContent = 'MK hiện tại không đúng!'; errEl.style.display = 'block'; return; }
-        if (!newPass) { errEl.textContent = 'Nhập MK mới!'; errEl.style.display = 'block'; return; }
-        if (newPass !== newPass2) { errEl.textContent = 'Xác nhận MK không khớp!'; errEl.style.display = 'block'; return; }
-        if (newPass.length < 4) { errEl.textContent = 'MK ít nhất 4 ký tự!'; errEl.style.display = 'block'; return; }
-        user.pass = newPass;
-    }
-    
-    user.name = name; user.department = dept; user.position = pos;
-    setUsers(users); sucEl.style.display = 'block';
-    renderEmpInfo(); setTimeout(closeEmpEditModal, 1000);
-}
-
+// === TRANG NHÂN VIÊN ===
 function renderEmpInfo() {
-    const u = getUsers()[currentUser];
-    document.getElementById('empName').textContent = u.name;
-    document.getElementById('eMaNV').textContent = currentUser;
-    document.getElementById('eFullname').textContent = u.name;
-    document.getElementById('eDept').textContent = u.department || 'Chưa cập nhật';
-    document.getElementById('ePos').textContent = u.position;
+    const u = db.users[currentUser];
+    document.getElementById('dMaNV').textContent = currentUser;
+    document.getElementById('dTen').textContent = u.name;
+    document.getElementById('dBoPhan').textContent = u.department || "Chưa cập nhật";
+    document.getElementById('dChucVu').textContent = u.position;
 }
 
-function loadPeriods() {
-    const data = getSalary()[currentUser] || {};
+function loadPeriodList() {
+    const salary = db.salary_data[currentUser] || {};
     const sel = document.getElementById('selPeriod');
     sel.innerHTML = '';
-    Object.keys(data).sort().reverse().forEach(p => {
+    Object.keys(salary).sort().reverse().forEach(p => {
         const opt = document.createElement('option');
         opt.value = p; opt.textContent = `Tháng ${p.split('-')[1]}/${p.split('-')[0]}`;
         sel.appendChild(opt);
     });
+    if (sel.value) showSalary();
 }
 
-function renderSalary() {
+function showSalary() {
     const period = document.getElementById('selPeriod').value;
-    const data = getSalary()[currentUser]?.[period];
+    const data = db.salary_data[currentUser]?.[period];
     const tbody = document.querySelector('#salaryTable tbody');
     tbody.innerHTML = '';
     if (!data) {
-        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;padding:2rem;color:var(--gray)">Chưa có dữ liệu lương</td></tr>';
-        document.getElementById('eDate').textContent = ''; return;
+        tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;padding:2rem;color:var(--gray)">Chưa có dữ liệu</td></tr>';
+        return;
     }
-    document.getElementById('eDate').textContent = data.date;
     data.items.forEach(row => {
         const tr = document.createElement('tr');
-        if (row.type === 'TongThuNhap') tr.style.borderTop = '2px solid var(--border)';
         if (row.type === 'ThucNhan') tr.className = 'total-row';
         let cls = '';
         if (row.type === 'ThuNhap' || row.type === 'TongThuNhap') cls = 'income';
         if (row.type === 'KhauTru') cls = 'deduction';
         if (row.type === 'ThucNhan') cls = 'net-amount';
-        tr.innerHTML = `<td>${row.label}</td><td class="text-right ${cls}">${formatMoney(row.amount)}</td>`;
+        tr.innerHTML = `<td>${row.label}</td><td class="text-right ${cls}">${new Intl.NumberFormat('vi-VN').format(row.amount)} VNĐ</td>`;
         tbody.appendChild(tr);
     });
-    updateConfirmStatus();
+    updateConfirmStatus(period);
 }
 
-function formatMoney(n) { return new Intl.NumberFormat('vi-VN').format(n) + ' VNĐ'; }
-function confirmSalary() {
+async function confirmSalary() {
     const period = document.getElementById('selPeriod').value;
     const key = `${currentUser}-${period}`;
-    const c = getConfirm(); c[key] = new Date().toLocaleString('vi-VN'); setConfirm(c);
-    alert('✅ Đã xác nhận nhận lương!'); updateConfirmStatus();
-}
-function updateConfirmStatus() {
-    const key = `${currentUser}-${document.getElementById('selPeriod').value}`;
-    const c = getConfirm()[key];
-    document.getElementById('confirmBtn').classList.toggle('hidden', !!c);
-    document.getElementById('confirmedBadge').classList.toggle('hidden', !c);
+    db.confirmations[key] = new Date().toLocaleString('vi-VN');
+    db.updated_at = new Date().toISOString();
+    const ok = await saveData(`Xác nhận lương ${currentUser} ${period}`);
+    if (ok) { alert('✅ Đã xác nhận!'); showSalary(); }
 }
 
-// === QUẢN TRỊ - CHỈNH SỬA ===
-function openAdminEditModal(manv) {
-    editingAdminMaNV = manv;
-    const u = getUsers()[manv];
-    document.getElementById('editAd_MaNV').value = manv;
-    document.getElementById('editAd_Name').value = u.name;
-    document.getElementById('editAd_Dept').value = u.department || '';
-    document.getElementById('editAd_Pos').value = u.position;
-    document.getElementById('editAd_NewPass').value = '';
-    document.getElementById('adminEdit_Err').style.display = 'none';
-    document.getElementById('adminEdit_Success').style.display = 'none';
-    document.getElementById('adminEditModal').classList.remove('hidden');
-}
-function closeAdminEditModal() { document.getElementById('adminEditModal').classList.add('hidden'); editingAdminMaNV = null; }
-
-function saveAdminChanges() {
-    const manv = editingAdminMaNV; if (!manv) return;
-    const name = document.getElementById('editAd_Name').value.trim();
-    const dept = document.getElementById('editAd_Dept').value.trim();
-    const pos = document.getElementById('editAd_Pos').value.trim();
-    const newPass = document.getElementById('editAd_NewPass').value.trim();
-    const errEl = document.getElementById('adminEdit_Err');
-    const sucEl = document.getElementById('adminEdit_Success');
-    
-    errEl.style.display = 'none'; sucEl.style.display = 'none';
-    if (!name || !pos) { errEl.textContent = 'Tên và Chức vụ không được để trống!'; errEl.style.display = 'block'; return; }
-    
-    const users = getUsers();
-    users[manv].name = name; users[manv].department = dept; users[manv].position = pos;
-    if (newPass) users[manv].pass = newPass;
-    setUsers(users); sucEl.style.display = 'block';
-    renderEmpList(); setTimeout(closeAdminEditModal, 1000);
+function updateConfirmStatus(period) {
+    const key = `${currentUser}-${period}`;
+    const confirmed = db.confirmations[key];
+    document.getElementById('btnConfirm').classList.toggle('hidden', !!confirmed);
+    document.getElementById('confirmedText').classList.toggle('hidden', !confirmed);
 }
 
-// === XỬ LÝ EXCEL ===
+// === TRANG QUẢN TRỊ ===
 document.getElementById('dropZone').addEventListener('click', () => document.getElementById('fileInput').click());
 document.getElementById('fileInput').addEventListener('change', e => {
-    selectedFile = e.target.files[0];
-    document.getElementById('fileName').textContent = '📄 ' + selectedFile.name;
-});
-document.getElementById('dropZone').addEventListener('dragover', e => e.preventDefault());
-document.getElementById('dropZone').addEventListener('drop', e => {
-    e.preventDefault(); selectedFile = e.dataTransfer.files[0];
-    document.getElementById('fileName').textContent = '📄 ' + selectedFile.name;
+    fileToUpload = e.target.files[0];
+    document.getElementById('fileName').textContent = '📄 ' + fileToUpload.name;
 });
 
-function processExcel() {
-    if (!selectedFile) { alert('Chọn file Excel!'); return; }
+async function processExcel() {
+    if (!fileToUpload) { alert('Chọn file Excel!'); return; }
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = async e => {
         const wb = XLSX.read(e.target.result, { type: 'binary' });
-        const ws = wb.Sheets[wb.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(ws);
-        if (!json.length) { alert('File không có dữ liệu!'); return; }
-        
-        const users = getUsers();
-        const data = getSalary();
-        
+        const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
         json.forEach(row => {
             const maNV = String(row.MaNV || row['Mã NV'] || '').trim();
-            const ten = String(row.HoTen || row['Họ Tên'] || '').trim();
-            const boPhan = String(row.BoPhan || row['Bộ Phận'] || '').trim();
-            const chucVu = String(row.ChucVu || row['Chức Vụ'] || '').trim();
-            const thang = String(row.ThangNam || row['Tháng Năm'] || '').trim();
             if (!maNV) return;
+            const ten = String(row.HoTen || '').trim();
+            const bp = String(row.BoPhan || '').trim();
+            const cv = String(row.ChucVu || '').trim();
+            const thang = String(row.ThangNam || '').trim();
             
-            if (ten || boPhan || chucVu) {
-                if (!users[maNV]) users[maNV] = { name: ten, department: boPhan, position: chucVu, pass: '123456' };
+            if (ten || bp || cv) {
+                if (!db.users[maNV]) db.users[maNV] = { name: ten, department: bp, position: cv, pass: '123456' };
                 else {
-                    if (ten) users[maNV].name = ten;
-                    if (boPhan) users[maNV].department = boPhan;
-                    if (chucVu) users[maNV].position = chucVu;
+                    if (ten) db.users[maNV].name = ten;
+                    if (bp) db.users[maNV].department = bp;
+                    if (cv) db.users[maNV].position = cv;
                 }
             }
             if (!thang) return;
-            if (!data[maNV]) data[maNV] = {};
-            if (!data[maNV][thang]) data[maNV][thang] = { date: `01/${thang.split('-')[1]}/${thang.split('-')[0]}`, items: [] };
-            data[maNV][thang].items.push({
-                label: row.NoiDung || row['Nội Dung'] || '',
-                amount: Number(row.SoTien || row['Số Tiền'] || 0),
-                type: row.Loai || row['Loại'] || 'ThuNhap'
+            if (!db.salary_data[maNV]) db.salary_data[maNV] = {};
+            if (!db.salary_data[maNV][thang]) {
+                db.salary_data[maNV][thang] = { date: `01/${thang.split('-')[1]}/${thang.split('-')[0]}`, items: [] };
+            }
+            db.salary_data[maNV][thang].items.push({
+                label: row.NoiDung || '',
+                amount: Number(row.SoTien || 0),
+                type: row.Loai || 'ThuNhap'
             });
         });
-        
-        setUsers(users); setSalary(data);
-        document.getElementById('uploadSuccess').style.display = 'block';
-        selectedFile = null; document.getElementById('fileName').textContent = '';
-        renderEmpList();
-        setTimeout(() => document.getElementById('uploadSuccess').style.display = 'none', 3000);
+        db.updated_at = new Date().toISOString();
+        const ok = await saveData("Cập nhật từ Excel");
+        if (ok) {
+            document.getElementById('uploadSuccess').style.display = 'block';
+            fileToUpload = null; document.getElementById('fileName').textContent = '';
+            renderEmpList();
+            setTimeout(() => document.getElementById('uploadSuccess').style.display = 'none', 3000);
+        }
     };
-    reader.readAsBinaryString(selectedFile);
+    reader.readAsBinaryString(fileToUpload);
 }
 
 function downloadTemplate() {
@@ -613,78 +407,55 @@ function downloadTemplate() {
     XLSX.writeFile(XLSX.utils.book_new({Sheets: {'Mau': XLSX.utils.json_to_sheet(sample)}}), "Mau_BangLuong.xlsx");
 }
 
-function exportAllData() {
-    const backup = { users: getUsers(), salary: getSalary(), confirm: getConfirm(), exportedAt: new Date().toLocaleString('vi-VN') };
-    const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `Luong_Backup_${new Date().toISOString().slice(0,10)}.json`;
-    a.click(); URL.revokeObjectURL(url); alert('✅ Sao lưu thành công!');
-}
-
-function importData() {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json';
-    input.onchange = e => {
-        if (!confirm('⚠️ Dữ liệu hiện tại sẽ bị GHI ĐÈ. Tiếp tục?')) return;
-        const reader = new FileReader();
-        reader.onload = re => {
-            try {
-                const d = JSON.parse(re.target.result);
-                localStorage.setItem('salary_users', JSON.stringify(d.users));
-                localStorage.setItem('salary_data', JSON.stringify(d.salary));
-                localStorage.setItem('salary_confirm', JSON.stringify(d.confirm));
-                alert('✅ Khôi phục thành công!'); renderEmpList();
-            } catch { alert('❌ File không hợp lệ!'); }
-        };
-        reader.readAsText(e.target.files[0]);
+async function saveUser() {
+    const manv = document.getElementById('fMaNV').value.trim();
+    const ten = document.getElementById('fTen').value.trim();
+    const bp = document.getElementById('fBoPhan').value.trim();
+    const cv = document.getElementById('fChucVu').value.trim();
+    const mk = document.getElementById('fMatKhau').value.trim();
+    if (!manv || !ten || !cv) { alert('Điền Mã NV, Họ Tên, Chức Vụ!'); return; }
+    if (!db.users[manv] && !mk) { alert('Người mới phải nhập Mật khẩu!'); return; }
+    db.users[manv] = {
+        name: ten, department: bp, position: cv,
+        pass: mk || db.users[manv].pass
     };
-    input.click();
+    db.updated_at = new Date().toISOString();
+    const ok = await saveData(`Thêm/Sửa ${manv}`);
+    if (ok) {
+        ['fMaNV','fTen','fBoPhan','fChucVu','fMatKhau'].forEach(id => document.getElementById(id).value = '');
+        renderEmpList();
+    }
 }
 
-function addEmployee() {
-    const manv = document.getElementById('addMaNV').value.trim();
-    const name = document.getElementById('addName').value.trim();
-    const dept = document.getElementById('addDept').value.trim();
-    const pos = document.getElementById('addPos').value.trim();
-    const pass = document.getElementById('addPass').value.trim();
-    if (!manv || !name || !pos || !pass) { alert('Điền đầy đủ thông tin có dấu *!'); return; }
-    const users = getUsers();
-    users[manv] = { name, department: dept, position: pos, pass };
-    setUsers(users);
-    document.getElementById('empSuccess').style.display = 'block';
-    ['addMaNV','addName','addDept','addPos','addPass'].forEach(id => document.getElementById(id).value = '');
-    renderEmpList();
-    setTimeout(() => document.getElementById('empSuccess').style.display = 'none', 3000);
+async function deleteUser(manv, ten) {
+    if (!confirm(`Xóa ${manv} - ${ten}? Dữ liệu liên quan cũng bị xóa!`)) return;
+    delete db.users[manv];
+    delete db.salary_data[manv];
+    Object.keys(db.confirmations).filter(k => k.startsWith(manv + '-')).forEach(k => delete db.confirmations[k]);
+    db.updated_at = new Date().toISOString();
+    const ok = await saveData(`Xóa ${manv}`);
+    if (ok) renderEmpList();
 }
 
-function deleteEmployee(manv, ten) {
-    if (!confirm(`⚠️ XÓA: ${manv} - ${ten}?\nTất cả dữ liệu liên quan sẽ bị xóa!`)) return;
-    const users = getUsers(), data = getSalary(), cf = getConfirm();
-    delete users[manv]; delete data[manv];
-    Object.keys(cf).filter(k => k.startsWith(manv + '-')).forEach(k => delete cf[k]);
-    setUsers(users); setSalary(data); setConfirm(cf);
-    alert('✅ Đã xóa!'); renderEmpList();
-}
-
-function deleteSalaryPeriod(manv, period) {
-    if (!confirm(`Xóa lương ${manv} - Tháng ${period}?`)) return;
-    const data = getSalary(), cf = getConfirm();
-    if (data[manv]?.[period]) delete data[manv][period];
-    const key = `${manv}-${period}`; if (cf[key]) delete cf[key];
-    setSalary(data); setConfirm(cf); renderEmpList();
+async function deleteSalaryPeriod(manv, period) {
+    if (!confirm(`Xóa dữ liệu lương ${manv} - Tháng ${period}?`)) return;
+    if (db.salary_data[manv]?.[period]) delete db.salary_data[manv][period];
+    const key = `${manv}-${period}`;
+    if (db.confirmations[key]) delete db.confirmations[key];
+    db.updated_at = new Date().toISOString();
+    const ok = await saveData(`Xóa lương ${manv} ${period}`);
+    if (ok) renderEmpList();
 }
 
 function renderEmpList() {
-    const users = getUsers(), data = getSalary(), cf = getConfirm();
     const tbody = document.querySelector('#empList tbody');
     tbody.innerHTML = '';
     
-    Object.entries(users).forEach(([manv, u]) => {
-        const periods = data[manv] || {};
-        const list = Object.keys(periods).sort().reverse();
+    Object.entries(db.users).forEach(([manv, u]) => {
+        if (manv === 'admin') return;
+        const periods = Object.keys(db.salary_data[manv] || {}).sort().reverse();
         
-        if (!list.length) {
+        if (!periods.length) {
             tbody.innerHTML += `<tr class="divider-row">
                 <td><strong>${manv}</strong></td>
                 <td>${u.name}</td>
@@ -694,18 +465,19 @@ function renderEmpList() {
                 <td>—</td>
                 <td>
                     <div class="row-actions">
-                        <button class="btn btn-warning btn-sm" onclick="openAdminEditModal('${manv}')">✏️ Sửa</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteEmployee('${manv}','${u.name}')">🗑️ Xóa NV</button>
+                        <button class="btn btn-warning btn-sm" onclick="editUser('${manv}')">✏️ Sửa NV</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser('${manv}','${u.name}')">🗑️ Xóa NV</button>
                     </div>
                 </td>
             </tr>`;
             return;
         }
         
-        list.forEach((p, idx) => {
+        periods.forEach((p, idx) => {
             const key = `${manv}-${p}`;
-            const ok = cf[key];
+            const ok = db.confirmations[key];
             const first = idx === 0;
+            
             tbody.innerHTML += `<tr class="${first?'divider-row':''}">
                 <td>${first?'<strong>'+manv+'</strong>':''}</td>
                 <td>${first?u.name:''}</td>
@@ -715,9 +487,11 @@ function renderEmpList() {
                 <td><span class="status-badge ${ok?'status-yes':'status-no'}">${ok?'✅ Đã xác nhận':'⏳ Chưa xác nhận'}</span></td>
                 <td>
                     <div class="row-actions">
-                        <button class="btn btn-secondary btn-sm" onclick="deleteSalaryPeriod('${manv}','${p}')">Xóa lương</button>
-                        ${first?`<button class="btn btn-warning btn-sm" onclick="openAdminEditModal('${manv}')">✏️ Sửa</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteEmployee('${manv}','${u.name}')">🗑️ Xóa NV</button>`:''}
+                        ${first?`
+                            <button class="btn btn-warning btn-sm" onclick="editUser('${manv}')">✏️ Sửa NV</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteUser('${manv}','${u.name}')">🗑️ Xóa NV</button>
+                        `:''}
+                        <button class="btn btn-secondary btn-sm" onclick="deleteSalaryPeriod('${manv}','${p}')">🗑️ Xóa lương</button>
                     </div>
                 </td>
             </tr>`;
@@ -725,8 +499,23 @@ function renderEmpList() {
     });
 }
 
-// === KHỞI TẠO KHI MỞ TRANG ===
-initData();
+function editUser(manv) {
+    const u = db.users[manv];
+    document.getElementById('fMaNV').value = manv;
+    document.getElementById('fTen').value = u.name;
+    document.getElementById('fBoPhan').value = u.department || '';
+    document.getElementById('fChucVu').value = u.position;
+    document.getElementById('fMatKhau').value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function exportData() {
+    const blob = new Blob([JSON.stringify(db, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `Luong_Backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
