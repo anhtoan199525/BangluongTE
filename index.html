@@ -21,14 +21,14 @@
         .form-group { flex: 1; min-width: 180px; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 500; color: #374151; font-size: 0.9rem; }
         .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
-        .btn { padding: 0.55rem 1rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .btn { padding: 0.5rem 0.9rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: #1d4ed8; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-secondary { background: var(--light); color: #374151; }
         .btn-warning { background: var(--warning); color: white; }
-        .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.85rem; }
+        .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.8rem; }
         .login-box { max-width: 420px; margin: 0; padding: 2rem; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         .login-box h2 { text-align: center; color: #1e40af; margin-bottom: 1.5rem; }
         .tabs { display: flex; margin-bottom: 1.2rem; border-bottom: 2px solid var(--border); }
@@ -48,8 +48,7 @@
         .status-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
         .status-yes { background: #dcfce7; color: #166534; }
         .status-no { background: #fef3c7; color: #92400e; }
-        .emp-actions { display: flex; gap: 0.4rem; margin-bottom: 0.3rem; }
-        .salary-actions { display: flex; gap: 0.4rem; }
+        .action-group { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; }
         .upload-area { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 2rem; text-align: center; margin: 1rem 0; cursor: pointer; }
         .upload-area:hover { border-color: var(--primary); background: #eff6ff; }
         .note-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
@@ -465,7 +464,7 @@ function renderEmpList() {
                 <td><span style="color:var(--gray)">Chưa có lương</span></td>
                 <td>—</td>
                 <td>
-                    <div class="emp-actions">
+                    <div class="action-group">
                         <button class="btn btn-warning btn-sm" onclick="editUser('${manv}')">✏️ Sửa</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteUser('${manv}','${u.name}')">🗑️ Xóa NV</button>
                     </div>
@@ -487,17 +486,13 @@ function renderEmpList() {
                 <td>Tháng ${p.split('-')[1]}/${p.split('-')[0]}</td>
                 <td><span class="status-badge ${ok?'status-yes':'status-no'}">${ok?'✅ Đã xác nhận':'⏳ Chưa xác nhận'}</span></td>
                 <td>
-                    ${isFirst?`
-                    <div class="emp-actions">
+                    <div class="action-group">
+                        ${isFirst?`
                         <button class="btn btn-warning btn-sm" onclick="editUser('${manv}')">✏️ Sửa</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteUser('${manv}','${u.name}')">🗑️ Xóa NV</button>
-                    </div>
-                    `:`<div class="salary-actions" style="padding-left:0"></div>`}
-                    ${!isFirst || periods.length > 0 ? `
-                    <div class="salary-actions" style="margin-top:${isFirst?'0.4rem':'0'}">
+                        `:''}
                         <button class="btn btn-secondary btn-sm" onclick="deleteSalaryPeriod('${manv}','${p}')">🗑️ Xóa lương</button>
                     </div>
-                    ` : ''}
                 </td>
             </tr>`;
         });
